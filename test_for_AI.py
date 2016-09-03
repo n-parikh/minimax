@@ -99,33 +99,9 @@ myMove = True
 numNodes = 0
 
 
-def AImove(board, player):
-
-    return AIrecursive(board, player)
-    myMove = False
-
 # for player, false is AI and true is player
 # AI is minimizing here.
 
-
-def AIrecursive(board, player):
-    global numNodes
-    numNodes += 1
-    nextboardlist = list()
-    winner = checkWinner()
-    if(winner is not None):
-        return winner
-    else:
-        if(player is False):
-            x = -1
-        else:
-            x = 1
-        for i in range(3):
-            for j in range(3):
-                if(board[i][j] is None):
-                    board[i][j] = x
-                    AIrecursive(board, not(player))
-                    board[i][j] = None
 
 best_move = None
 scoreList = [0]
