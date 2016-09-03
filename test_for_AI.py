@@ -104,14 +104,31 @@ numNodes = 0
 
 
 best_move = None
-scoreList = [0]
-movesList = [0]
+scoreList = []
+movesList = []
+
+
+def checkMinMax(board, player):
+    global best_move, scoreList, movesList
+
+    if(player is False):
+        # min calc
+        min_index = scoreList.index(min(x for x in scoreList if x is not None))
+        best_move = movesList[min_index]
+        # print(scoreList[min_index])
+        return scoreList[min_index]
+    else:
+        # max calc
+        max_index = scoreList.index(max(x for x in scoreList if x is not None))
+        best_move = movesList[max_index]
+        # print(scoreList[max_index])
+        return scoreList[max_index]
 
 
 def minimax(board, player):
     global best_move, scoreList, movesList
     winner = checkWinner(board)
-    print(winner)
+    # print(winner)
     if(winner is None):
         if(player is False):
             x = -1
@@ -121,26 +138,20 @@ def minimax(board, player):
             for j in range(3):
                 if(board[i][j] is None):
                     board[i][j] = x
-                    scoreList.append(minimax(board, not(player)))
-                    movesList.append(board)
+                    if(minimax(board, not(player)) is not None):
+                        scoreList.append(minimax(board, not(player)))
+                        movesList.append(board)
+                    else:
+                        scoreList.append(0)
+                        movesList.append(board)
                     board[i][j] = None
                 else:
                     continue
-        if(player is False):
-            # min calc
-            min_index = scoreList.index(min(scoreList))
-            best_move = movesList[min_index]
-            # print(scoreList[min_index])
-            return scoreList[min_index]
-        else:
-            # max calc
-            max_index = scoreList.index(max(scoreList))
-            best_move = movesList[max_index]
-            # print(scoreList[max_index])
-            return scoreList[max_index]
+
     else:
         # end state, value is -1 or 1
         return winner
 
-score = minimax(board, False)
+minimax(board, False)
+score = checkMinMax(board, False)
 print(best_move, score)
