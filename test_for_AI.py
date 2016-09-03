@@ -1,7 +1,7 @@
 
 
-board = [[1, None, None],
-         [None, None, None],
+board = [[None, None, None],
+         [None, None, 1],
          [None, None, None]]
 
 sumList = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -114,12 +114,14 @@ def checkMinMax(board, player):
     if(player is False):
         # min calc
         min_index = scoreList.index(min(x for x in scoreList if x is not None))
+        print(min_index)
         best_move = movesList[min_index]
         # print(scoreList[min_index])
         return scoreList[min_index]
     else:
         # max calc
         max_index = scoreList.index(max(x for x in scoreList if x is not None))
+        print(max_index)
         best_move = movesList[max_index]
         # print(scoreList[max_index])
         return scoreList[max_index]
@@ -138,12 +140,16 @@ def minimax(board, player):
             for j in range(3):
                 if(board[i][j] is None):
                     board[i][j] = x
+                    board_edit = board
                     if(minimax(board, not(player)) is not None):
+
+                        movesList.append(board_edit)
+
                         scoreList.append(minimax(board, not(player)))
-                        movesList.append(board)
                     else:
+
+                        movesList.append(board_edit)
                         scoreList.append(0)
-                        movesList.append(board)
                     board[i][j] = None
                 else:
                     continue
@@ -154,4 +160,6 @@ def minimax(board, player):
 
 minimax(board, False)
 score = checkMinMax(board, False)
-print(best_move, score)
+print(score)
+for x in movesList:
+    print(x)
