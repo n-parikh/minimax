@@ -159,12 +159,13 @@ def getPossibleMoves(board):
 
 
 def getNewBoard(board, move, player):
+    temp_board = board
     if(player is False):
         x = -1
     else:
         x = 1
-    board[move[0]][move[1]] = x
-    return board
+    temp_board[move[0]][move[1]] = x
+    return temp_board
 
 
 def checkMinMax(board, player):
@@ -187,11 +188,11 @@ def checkMinMax(board, player):
 
 
 def minimax(board, player):
-    print("m")
+
     global best_move, scoreList, movesList, numNodes, possibleMoves
     numNodes += 1
     gen = []
-    print(board)
+
     for k in board:
         for y in k:
             gen.append(y)
@@ -200,7 +201,7 @@ def minimax(board, player):
         game_over = False
 
     else:
-        print('game_over')
+
         return checkWinner(board)
 
     if(game_over is False):
@@ -208,12 +209,12 @@ def minimax(board, player):
             x = -1
         else:
             x = 1
-
+        print(board)
         pMove = getPossibleMoves(board)
 
         for a in pMove:
+            print(pMove.index(a))
             nextState = getNewBoard(board, a, player)
-            print(nextState)
             scoreList.append(minimax(nextState, not(player)))
             movesList.append(a)
 
@@ -221,9 +222,9 @@ def minimax(board, player):
 
 
 def AImove(board, player):
-    print("s")
+    # print("s")
     minimax(board, player)
-    print('d')
+    # print('d')
     # if(end == 10):
     #     messagebox.showinfo("Game Over", "Player Won")
     # elif(end == -10):
@@ -232,6 +233,8 @@ def AImove(board, player):
     #     messagebox.showinfo("Game Over", "Tie")
     # elif(end == 5):
     print(best_move[0], best_move[1])
+    board[best_move[0]][best_move[1]] = -1
+    # print(board)
     button_new = findButton(best_move[0], best_move[1])
     button_new["text"] = "O"
 
