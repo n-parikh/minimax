@@ -7,7 +7,7 @@ board = [[None, None, None],
          [None, None, None],
          [None, None, None]]
 
-myMove = False
+myMove = True
 
 win = Tk()
 frame = Frame(win)
@@ -17,17 +17,22 @@ restart1 = Button(win, text="RESTART", width=10, height=5)
 restart2 = Button(win, width=10, height=5, state=DISABLED, bg='black')
 
 
-def onButtonClick(row, column):
+def onButtonClick(row, column, player):
     global myMove, board
-    if(myMove == False):
+    print(player)
+    if(player == True):
+
         # setting the value in the board, 1 = player, -1 = AI
         board[row][column] = 1
         button_pressed = findButton(row, column)
         if(button_pressed != None):
             button_pressed["text"] = "X"
-            myMove = True
+
+            player = False
+            AImove(board, player)
     else:
-        AImove(board, myMove)
+
+        print("else")
 
 
 def findButton(row, column):
@@ -122,8 +127,15 @@ def checkRowsAndColumns(board):
 
 
 def checkWinner(board):
+    gen = []
+    for k in board:
+        for y in k:
+            gen.append(y)
+    if(None in gen):
+        return 5
     diag = checkWinDiag(board)
     r_c = checkRowsAndColumns(board)
+
     if(diag is None and r_c is None):
         return 20
     elif(diag is None and r_c is not None):
@@ -175,16 +187,20 @@ def checkMinMax(board, player):
 
 
 def minimax(board, player):
+    print("m")
     global best_move, scoreList, movesList, numNodes, possibleMoves
     numNodes += 1
     gen = []
+    print(board)
     for k in board:
         for y in k:
             gen.append(y)
 
     if(None in gen):
         game_over = False
+
     else:
+        print('game_over')
         return checkWinner(board)
 
     if(game_over is False):
@@ -194,8 +210,10 @@ def minimax(board, player):
             x = 1
 
         pMove = getPossibleMoves(board)
+
         for a in pMove:
             nextState = getNewBoard(board, a, player)
+            print(nextState)
             scoreList.append(minimax(nextState, not(player)))
             movesList.append(a)
 
@@ -203,24 +221,25 @@ def minimax(board, player):
 
 
 def AImove(board, player):
-    end = minimax(board, player)
-    if(end == 10):
-        messagebox.showinfo("Game Over", "Player Won")
-    elif(end == -10):
-        messagebox.showinfo("Game Over", "AI Won")
-    elif(end == 20):
-        messagebox.showinfo("Game Over", "Tie")
-
+    print("s")
+    minimax(board, player)
+    print('d')
+    # if(end == 10):
+    #     messagebox.showinfo("Game Over", "Player Won")
+    # elif(end == -10):
+    #     messagebox.showinfo("Game Over", "AI Won")
+    # elif(end == 20):
+    #     messagebox.showinfo("Game Over", "Tie")
+    # elif(end == 5):
     print(best_move[0], best_move[1])
     button_new = findButton(best_move[0], best_move[1])
     button_new["text"] = "O"
-    myMove = False
 
 
 for r in range(3):
     for c in range(3):
         i = 0
-        Button(frame, height=5, width=10, command=(lambda row_=r, column_=c: onButtonClick(row_, column_))).grid(row=r, column=c)
+        Button(frame, height=5, width=10, command=(lambda row_=r, column_=c: onButtonClick(row_, column_, True))).grid(row=r, column=c)
         i += 1
 
 # restart0.grid(row=3, column=0)
